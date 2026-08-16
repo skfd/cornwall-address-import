@@ -1,0 +1,99 @@
+[city]
+slug = "cornwall"
+name = "Cornwall"
+# Cornwall publishes NO neighbourhood/planning fabric (org services directory
+# swept 2026-08-15, 107 services). Best available: Election_Polling_Zones,
+# 8 polygons, point-tested at 100.00% of snapshot-25 addresses (1 orphan).
+# The NAME values are polling *venues* ("St. Lawrence Secondary School",
+# "City Limits Bar & Grill") — landmark names, not area names; judged better
+# than bare quadtree squares (the Hamilton lesson) and freely rebuildable
+# while the city is pre-announcement. Boundary_Poly (3 features) noted for
+# 10-boundary-clipping.md.
+neighbourhoods_url = "https://services2.arcgis.com/tPtW2sjE3XOR63A7/arcgis/rest/services/Election_Polling_Zones/FeatureServer/13/query?where=1%3D1&outFields=NAME,POLL_NUM&outSR=4326&f=geojson"
+neighbourhood_name_field = "NAME"
+
+[source]
+sqlite_path = "C:/Users/kk/Code/ontario-address-changes/data/cornwall/cornwall.db"
+
+# Per-city projection recipe (multi-city Tier 2), measured against snapshot 25
+# (2026-08-15, 20,641 active rows; AddressID is a stable key).
+[source_fields]
+# First city on the props branch: the canonical `street` is the bare name
+# component ("WALTER" — the 18-of-42 survey shape), while STREET_LNG carries
+# name + suffix + direction ("SECOND ST W"), 100% populated. ALL-CAPS like
+# Quinte West (TODO §9 gates upload), and the suffixes are the variant
+# shorts AV/CR/BV/WY on 32% of rows — added to the engine's suffix tables
+# 2026-08-15 (guardrail-checked against all four prior cities: zero streets
+# end in those tokens, nothing moves).
+street_from = "props:STREET_LNG"
+# NOT "full": ADDRESS prefixes the unit onto the number ("A-1108 SECOND ST
+# W") — the third distinct full-column trap (Guelph appends, Quinte West
+# doubles spellings, Cornwall prefixes). Synthesize.
+full_from = "number+street"
+# municipality deliberately undeclared: CITY = 'CORNWALL' on all 20,641 rows
+# (measured 2026-08-15) — a constant contributes nothing to dedup keying or
+# review display. Not amalgamated; no per-address ward field either.
+# unit: 3,059 rows (14.8%); ADD_TYPE mirrors it (PRIMARY 17,619 / UNIT 3,003
+# / SECONDARY 1) — a row-type flag, NOT Toronto's land-use address_class, so
+# address_class stays undeclared. FLOOR (2,399) and BUILDING (98) ride along
+# in props. POSTAL is 99.9% populated — no postcode capability exists yet.
+unit = "unit"
+
+# Same decision as the other unit-bearing cities (09-units.md option 2).
+# Measured 2026-08-15 on snapshot 25: 20,641 rows -> 17,612 civic groups on
+# (number, STREET_LNG); 565 stacked, 33 without a unit-less representative,
+# 20 with >1 unit-less rows.
+[units]
+policy = "collapse-to-civic"
+
+[run_defaults]
+# Densest downtown cell (1,791 rows) for first test runs.
+bbox = [45.012, -74.736, 45.024, -74.724]
+overpass_url = "https://overpass-api.de/api/interpreter"
+
+[osm]
+source = "local"
+# Same Ontario PBF as every city in the portfolio.
+pbf_url = "https://download.geofabrik.de/north-america/canada/ontario-latest.osm.pbf"
+# Source-data extent (20,641 rows measured 2026-08-15: lat 45.00815..45.08509,
+# lon -74.84304..-74.66798) plus a small margin. North of the rectangle is
+# SDG county (a separate portfolio dataset — Cornwall is a separated city
+# inside it, the Guelph/Wellington shape); south is the St. Lawrence and the
+# US border. See 10-boundary-clipping.md before trusting edge tiles.
+city_bbox = [45.00, -74.86, 45.10, -74.65]
+extract_dir = "data/osm"
+
+[conflation]
+match_radius_m = 100
+match_near_m = 15
+
+[checks]
+match_far = true
+# suffix_range deliberately absent: no lo_num/hi_num in this source.
+city_duplicate = true
+missing_sample = true
+nearby_street_mismatch = true
+
+[check_params.city_duplicate]
+radius_m = 3.0
+
+[check_params.missing_sample]
+every_nth = 50
+
+[check_params.nearby_street_mismatch]
+radius_m = 20.0
+
+[check_params.match_number_drift]
+slack_m = 2.0
+
+[upload]
+changesets_per_minute = 1
+changeset_comment_template = "{city} Open Data address import, run={run_name}"
+
+[export]
+attribution = "City of Cornwall Open Data"
+# Survey says 81.1% missing; entry-state probe of 2026-08-15 pending at write
+# time (see README). No proposal exists; write and publish one per the OSM
+# Import Guidelines BEFORE any production upload, and mind TODO §9
+# (title-casing) first.
+import_plan = ""
