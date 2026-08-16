@@ -34,6 +34,17 @@ neighbourhood fabric exists — the tile names are polling venues, quirky but
 navigable, and freely rebuildable pre-announcement. Cornwall is a separated
 city inside SDG county (the Guelph/Wellington containment shape).
 
+Entry state probed 2026-08-15 (`onboarding/entry-state-2026-08-15.json`):
+CanVec 7.0 seed (1,127 of 1,365 sampled) plus Matthew Darwin's 2018 rename
+retag — but **NOT plain greenfield: `TheRandomGamrTRG` is actively adding
+addresses from Cornwall's own open data** (changeset 182902244, 2026-05-19,
+3,073 changes, source = the city's ArcGIS portal; 2026 holds 13% of sampled
+elements). Untagged as an import, no wiki page — an informal, live, local
+effort. **Status: PARKED, contact-first** (the Oakville rule): talk to
+TheRandomGamrTRG before running anything visible; offer the tooling, don't
+compete. DannyMcD (2019 road-name expansion sweeps) is the second local
+contact; Matthew Darwin the third.
+
 Before any production upload: wiki proposal page, forum announcement, and
 feedback window per the
 [OSM Import Guidelines](https://wiki.openstreetmap.org/wiki/Import/Guidelines)
