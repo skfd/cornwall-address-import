@@ -27,8 +27,8 @@ normalizer until 2026-08-15; expect the first baseline to come in lower.
 
 Distinctive traits (details in config comments): first city to project its
 street from props (`STREET_LNG` — the canonical `street` is the bare name
-component); ALL-CAPS streets (upload gated on the engine's title-casing
-TODO); the `full` column prefixes units onto the number ("A-1108 SECOND ST
+component); ALL-CAPS streets (title-cased on export since 2026-08-29,
+`[export] street_case`); the `full` column prefixes units onto the number ("A-1108 SECOND ST
 W"); tiles use the 8 election polling zones at 100% coverage because no
 neighbourhood fabric exists — the tile names are polling venues, quirky but
 navigable, and freely rebuildable pre-announcement. Cornwall is a separated
